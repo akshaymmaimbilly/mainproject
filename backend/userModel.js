@@ -12,9 +12,23 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    username:String,
-    email:String,
-    password:String,
+    username:
+    {
+      type: String,
+      unique:true,
+      required:true
+    },
+    email:
+    {
+      type: String,
+      unique:true,
+      required:true
+    },
+    password: 
+    {
+      type:String,
+      required:true
+    }, 
     contactInfo:String,
     place:String,
     education:String,

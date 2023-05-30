@@ -1,13 +1,13 @@
 import React from 'react';
 import "./login.css";
 import  { useEffect, useState } from 'react';
-import  logoImg from "./img/logo.png"
+import  logoImg from "./img/logo.png";
 import GoogleIcon from '@mui/icons-material/Google';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import axios from 'axios';
-
+import { useNavigate } from "react-router-dom";
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
 
@@ -17,14 +17,10 @@ import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
 
 function Login() {
- 
+ const [user, setUser] = useState({})
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  
-
-  
-  
-
+  const nav = useNavigate();
     const [data, setData] = useState({
         username:'',
         email:'',
@@ -111,9 +107,27 @@ function Login() {
       alert("Error occurred");
     }
   });
-      
-    
-    
+     }
+
+   function login(){
+    axios.post("http://localhost:8080/login", {username:username, password:password})
+    .then((res) => {
+      if(res.status === 200){
+        setUser(res.data)
+        console.log(user)
+        nav("/");
+      }
+      if(res.status === 202){
+        setUser(res.data);
+        nav("/admin")
+      }
+      else{
+        nav("/Login")
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
    }
    
     return (
@@ -128,15 +142,15 @@ function Login() {
               <div className="input-field">
                
                 <i className="fas fa-user"></i>
-                <input type="text" name="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+                <input type="text" name="username"  placeholder="Username" />
               </div>
               <div className="input-field">
                 <i className="fas fa-lock"></i>
-                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder="Password" />
+                <input type={showPassword ? 'text' : 'password'}  name="password" placeholder="Password" />
                 
               </div>
               
-              <input type="submit" value="Login" className="btn solid" />
+              <input type="button" onClick={login} value="Login" className="btn solid" />
               <p className="social-text">Or Sign in with social platforms</p>
               <div className="social-media">
                 <a href="#" className="social-icon">
